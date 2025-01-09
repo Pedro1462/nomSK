@@ -132,10 +132,6 @@
 
     <section class="formulario">
         <form action="index.php?c=finiquito&a=procesar" method="post" enctype="multipart/form-data">
-        <!--<input type="hidden" name="apellidoPaterno" value="<?= htmlspecialchars($empleado['apellidoPaterno']) ?>"
-        <input type="hidden" name="apellidoMaterno" value="<?= htmlspecialchars($empleado['apellidoMaterno']) ?>">
-        <input type="hidden" name="nombreEmpleado" value="<?= htmlspecialchars($empleado['nombreEmpleado']) ?>">-->
-
             <input type="hidden" name="fechaingreso" value="<?= htmlspecialchars($empleado['fechaingreso']) ?>">
             <input type="hidden" name="salarioSDR" value="<?= htmlspecialchars($empleado['SDR']) ?>">
             <input type="hidden" name="bonoDV" value="<?= htmlspecialchars($empleado['bonoDiarioVariable']) ?>">
@@ -296,12 +292,6 @@
     </table>
 
     <form method="post" action="index.php?c=finiquito&a=exportarExcel">
-    <!--<input type="hidden" name="fechaingreso" value="<?php echo $fechaIngreso ?>">
-    <input type="hidden" name="nombreEmpleado" value="<?php echo $nombre ?>">
-    <input type="hidden" name="apellidoPaterno" value="<?php echo $apellidoPaterno ?>">
-    <input type="hidden" name="apellidoMaterno" value="<?php echo $apellidoMaterno ?>"> -->
-
-    <input type="hidden" id="nombEmpleado" name="nombEmpleado" />
     <input type="hidden" name="diasLaborados" value="<?php echo $dias; ?>">
     <input type="hidden" name="factorAguinaldo" value="<?php echo $factorAguinaldo; ?>">
     <input type="hidden" name="totalAguinaldo" value="<?php echo $totalAguinaldo; ?>">
