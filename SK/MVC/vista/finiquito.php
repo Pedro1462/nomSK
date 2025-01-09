@@ -16,16 +16,13 @@
     <section class="formulario">
         <form action="index.php?c=finiquito&a=inicio" method="post" enctype="multipart/form-data">
 
-            Selecciona un Estatus:
-            <select name="estado">
-                <option value="1">Alta</option>
-                <option value="2">Baja</option>
-            </select>
-
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="nombreEmpleadoInput" name="nomEmpleado"
-                    placeholder="nomEmpleado" required />
-                <label for="nombreEmpleadoInput">Nombre Empleado</label>
+                <input type="text" class="form-control" id="busquedaNombre" name="busquedaNombre"
+                    placeholder="Buscar nombre de empleado" autocomplete="off" />
+                <label for="busquedaNombre">Buscar Nombre</label>
+                <div id="sugerenciasNombre" class="sugerencias-lista"></div>
+                <input type="hidden" id="nombEmpleado" name="nombEmpleado" />
+                <button type="button" id="buscarEmpleadoBtn" class="btn btn-secondary mt-2">Buscar Empleado</button>
             </div>
 
             <div class="btn-group">
@@ -35,7 +32,7 @@
         </form>
     </section>
 
-    <h1>Finiquito</h1>
+    <h1>Datos del Empleado</h1>
 
     <div class="row">
         <div class="col-md-12">
@@ -80,7 +77,6 @@
                             <th>Fecha de Ingreso</th>
                             <th>RFC</th>
                             <th>NSS</th>
-
                         </tr>
 
                         <?php if (!empty($resultado)): ?>
@@ -103,6 +99,30 @@
                         <?php endif; ?>
 
                     </table>
+
+                    <table class="table table-hover" id="sampleTable2">
+                        <tr>
+                            <th>Numero Credito INFONAVIT</th>
+                            <th>Valor del Credito</th>
+                            <th>Tipo de Credito</th>
+                        </tr>
+
+                        <?php if (!empty($resultado)): ?>
+                            <?php foreach ($resultado as $empleado): ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($empleado['numCredito']) ?></td>
+                                    <td><?= htmlspecialchars($empleado['valorCredito']) ?></td>
+                                    <td><?= htmlspecialchars($empleado['tipoCredinfonavit']) ?></td>
+                                </tr>
+
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="21">No se encontraron datos.</td>
+                            </tr>
+                        <?php endif; ?>
+
+                    </table>
                 </div>
             </div>
         </div>
@@ -112,6 +132,10 @@
 
     <section class="formulario">
         <form action="index.php?c=finiquito&a=procesar" method="post" enctype="multipart/form-data">
+        <!--<input type="hidden" name="apellidoPaterno" value="<?= htmlspecialchars($empleado['apellidoPaterno']) ?>"
+        <input type="hidden" name="apellidoMaterno" value="<?= htmlspecialchars($empleado['apellidoMaterno']) ?>">
+        <input type="hidden" name="nombreEmpleado" value="<?= htmlspecialchars($empleado['nombreEmpleado']) ?>">-->
+
             <input type="hidden" name="fechaingreso" value="<?= htmlspecialchars($empleado['fechaingreso']) ?>">
             <input type="hidden" name="salarioSDR" value="<?= htmlspecialchars($empleado['SDR']) ?>">
             <input type="hidden" name="bonoDV" value="<?= htmlspecialchars($empleado['bonoDiarioVariable']) ?>">
@@ -140,6 +164,18 @@
                 <label for="primaDomInput">Prima Dominical Pendiente de Pago</label>
             </div>
 
+            <div class="form-floating mb-3">
+                <input type="number" class="form-control" id="descInfonavitInput" name="descInfonavit"
+                    placeholder="descInfonavit" step="0.01" required />
+                <label for="descInfonavitInput">Ingresa el monto del descuento INFONAVIT por aplicar</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="number" class="form-control" id="descOtrasRetInput" name="descOtrasRet"
+                    placeholder="descOtrasRet" step="0.01" required />
+                <label for="descOtrasRetInput">Ingresa el monto del descuento por otras Retenciones por aplicar</label>
+            </div>
+
             <div class="btn-group">
                 <button type="submit" class="btn btn-personalizado">Calcular</button>
                 <a href="index.php" class="btn btn-personalizado">Cancelar</a>
@@ -149,7 +185,7 @@
         </form>
     </section>
 
-    <h1>Resultados</h1>
+    <h1>Finiquito</h1>
 
     <table class="table table-hover" id="sampleTable3">
         <h1>Percepciones</h1>
@@ -179,7 +215,7 @@
             <th>Dias de Vacaciones</th>
             <th>Total Vacaciones</th>
             <th>Prima Vacacional</th>
-            
+
         </tr>
 
         <?php if (isset($diasVac, $factorVacaciones, $diasVacionesLFT, $totalVacaciones, $primaVac)): ?>
@@ -189,7 +225,7 @@
                 <td><?= number_format($diasVacionesLFT, 2) ?></td>
                 <td><?= number_format($totalVacaciones, 2) ?></td>
                 <td><?= number_format($primaVac, 2) ?></td>
-                
+
             </tr>
         <?php else: ?>
             <tr>
@@ -204,7 +240,7 @@
             <th>Total de los dias Trabajados</th>
             <th>Prima Dominical</th>
             <th>Total Percepciones</th>
-            
+
         </tr>
 
         <?php if (isset($diasPendporPagar, $primaDominical, $diasPendientesPago, $sumaPercerciones)): ?>
@@ -221,7 +257,65 @@
         <?php endif; ?>
     </table>
 
+    <table class="table table-hover" id="sampleTable3">
+        <h1>Deducciones</h1>
+        <tr>
+            <th>INFONAVIT</th>
+            <th>Otras Deducciones</th>
+            <th>Total Deducciones</th>
+        </tr>
 
+        <?php if (isset($descInfonavit, $descOtrasRet, $sumaDeducciones)): ?>
+            <tr>
+                <td><?= htmlspecialchars($descInfonavit) ?></td>
+                <td><?= number_format($descOtrasRet, 2) ?></td>
+                <td><?= number_format($sumaDeducciones, 2) ?></td>
+            </tr>
+        <?php else: ?>
+            <tr>
+                <td colspan="3">No se han calculado resultados.</td>
+            </tr>
+        <?php endif; ?>
+    </table>
+
+    <table class="table table-hover" id="sampleTable3">
+        <h1>Total Finiquito</h1>
+        <tr>
+            <th>Neto a Pagar</th>
+        </tr>
+
+        <?php if (isset($netoPagar)): ?>
+            <tr>
+                <td><?= number_format($netoPagar, 2) ?></td>
+            </tr>
+        <?php else: ?>
+            <tr>
+                <td colspan="3">No se han calculado resultados.</td>
+            </tr>
+        <?php endif; ?>
+    </table>
+
+    <form method="post" action="index.php?c=finiquito&a=exportarExcel">
+    <!--<input type="hidden" name="fechaingreso" value="<?php echo $fechaIngreso ?>">
+    <input type="hidden" name="nombreEmpleado" value="<?php echo $nombre ?>">
+    <input type="hidden" name="apellidoPaterno" value="<?php echo $apellidoPaterno ?>">
+    <input type="hidden" name="apellidoMaterno" value="<?php echo $apellidoMaterno ?>"> -->
+
+    <input type="hidden" id="nombEmpleado" name="nombEmpleado" />
+    <input type="hidden" name="diasLaborados" value="<?php echo $dias; ?>">
+    <input type="hidden" name="factorAguinaldo" value="<?php echo $factorAguinaldo; ?>">
+    <input type="hidden" name="totalAguinaldo" value="<?php echo $totalAguinaldo; ?>">
+    <input type="hidden" name="totalVacaciones" value="<?php echo $totalVacaciones; ?>">
+    <input type="hidden" name="primaVacacional" value="<?php echo $primaVac; ?>">
+    <input type="hidden" name="primaDominical" value="<?php echo $primaDominical; ?>">
+    <input type="hidden" name="sumaPercepciones" value="<?php echo $sumaPercerciones; ?>">
+    <input type="hidden" name="sumaDeducciones" value="<?php echo $sumaDeducciones; ?>">
+    <input type="hidden" name="netoPagar" value="<?php echo $netoPagar; ?>">
+    <button type="submit"  class="btn btn-success">Exportar a Excel</button>
+</form>
+
+
+    <script src="../../script/scriptConsultaNombreFiniq.js"></script>
 </body>
 
 </html>
