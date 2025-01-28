@@ -17,9 +17,12 @@
         <button class="btn btn-personalizado" onclick="location.href='?c=insCodigoP';">Insertar Codigo Postal</button>
         <button class="btn btn-personalizado" onclick="location.href='?c=consultainfoBD';">Consultar informacion de la BD</button>
         <button class="btn btn-personalizado" onclick="location.href='?c=finiquito';">Finiquito</button>
+        <button class="btn btn-personalizado" onclick="location.href='?c=menuVacaciones';">Vacaciones</button>
         <button class="btn btn-personalizado" onclick="location.href='?c=menuincap';">Insertar Incapacidades</button>
         <button class="btn btn-personalizado" onclick="location.href='?c=menubajas';">Insertar bajas</button>
         <button class="btn btn-personalizado" onclick="location.href='?c=insertINFONAVIT';">Insertar INFONAVIT</button>
+        <button class="btn btn-personalizado" onclick="location.href='?c=solicitudesModificacion';">Insertar Solicitudes de Modificaciones</button>
+        <button class="btn btn-personalizado" onclick="location.href='?c=menudelasactualizaciones';">Actualizaciones de Tablas</button>
     </div>
 
 </body>

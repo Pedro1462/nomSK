@@ -1,6 +1,10 @@
 <?php
 require_once "modelo/consultasBD.php";
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+
 class inicioControlador
 {
 
@@ -89,48 +93,47 @@ class inicioControladorControlEmpleados
             switch ($type) {
                 case 'empleado':
                     $resultados = $this->modelo->consultaNombreEmpleado($query);
-                break;
+                    break;
 
                 case 'empresa':
                     $resultados = $this->modelo->consultaNombreEmpresa($query);
-                break;
+                    break;
 
                 case 'sucursal':
                     $resultados = $this->modelo->consultaNombreSucursal($query);
-                break;
+                    break;
 
                 case 'puesto':
                     $resultados = $this->modelo->consultaNombrePuesto($query);
-                break;
+                    break;
 
                 case 'genero':
                     $resultados = $this->modelo->consultaNombreGenero($query);
-                break;
+                    break;
 
                 case 'descanso':
                     $resultados = $this->modelo->consultaNombreDescanso($query);
-                break;
+                    break;
 
                 case 'formaPago':
                     $resultados = $this->modelo->consultaFormadePago($query);
-                break;
+                    break;
 
                 case 'codigoP':
                     $resultados = $this->modelo->consultaCodigoPostal($query);
-                break;
+                    break;
 
                 case 'consultaSDR':
                     $resultados = $this->modelo->consultaSDR($query);
-                break;
+                    break;
 
                 case 'consultaSDI':
                     $resultados = $this->modelo->consultaSDI($query);
-                break;
+                    break;
 
                 case 'bonoVar':
                     $resultados = $this->modelo->consultaBonoVariable($query);
-                break;
-                
+                    break;
             }
 
             // Devolver resultados como JSON
@@ -144,31 +147,31 @@ class inicioControladorControlEmpleados
             $fechaIngreso = $_POST['fechaIngresoEmpleado'];
             $fechaAltaIMSS = $_POST['fechaAltaIMSS'];
             $idEmpleado = $_POST['idEmpleado'];
-            $idEmpresa = $_POST['idEmpresa'];
-            $idSucursal = $_POST['idSucursal'];
+            $idEmpresa = $_POST['busquedaEmpresa'];
+            $idSucursal = $_POST['busquedaSucursal'];
             $idPuesto = $_POST['idPuesto'];
-            $idGenero = $_POST['idGenero'];
-            $idDescanso = $_POST['idDescanso'];
-            $idFormaPago = $_POST['idFormaPago'];
+            $idGenero = $_POST['busquedaGenero'];
+            $idDescanso = $_POST['busquedaDescanso'];
+            $idFormaPago = $_POST['busquedaFormaPago'];
             $idCodigoP = $_POST['idCP'];
             $idSDR = $_POST['idSDR'];
             $idSDI = $_POST['idSDI'];
             $idBV = $_POST['idBV'];
 
             if ($this->modelo->insertarControlEmpleado(
-            $fechaIngreso,
-            $fechaAltaIMSS,
-            $idEmpleado,
-            $idEmpresa,
-            $idSucursal,
-            $idPuesto,
-            $idGenero,
-            $idDescanso,
-            $idFormaPago,
-            $idCodigoP,
-            $idSDR,
-            $idSDI,
-            $idBV
+                $fechaIngreso,
+                $fechaAltaIMSS,
+                $idEmpleado,
+                $idEmpresa,
+                $idSucursal,
+                $idPuesto,
+                $idGenero,
+                $idDescanso,
+                $idFormaPago,
+                $idCodigoP,
+                $idSDR,
+                $idSDI,
+                $idBV
             )) {
                 echo "<script>
                     alert('Registro exitoso');
@@ -178,7 +181,6 @@ class inicioControladorControlEmpleados
             } else {
                 echo "<script>alert('Error al insertar la informacion');</script>";
             }
-
         }
 
         require_once "vista/insControlEmpl.php";
@@ -229,15 +231,13 @@ class inicioControladorConsultaInfoBD
     }
 
     public function inicio()
-    { 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') 
-        {
-        $estado = $_POST['estado'];
-        $nombre = strtoupper($_POST['nomEmpleado'] ?? null);
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $estado = $_POST['estado'];
+            $nombre = strtoupper($_POST['nomEmpleado'] ?? null);
 
-        $resultado=$this->modelo->consultainfoBD($estado, $nombre);
-
-          }
+            $resultado = $this->modelo->consultainfoBD($estado, $nombre);
+        }
         require_once "vista/consultainfoBD.php";
     }
 }
@@ -255,7 +255,7 @@ class inicioControladorMenuIncap
 
     public function inicio()
     {
-        
+
         require_once "vista/menuincap.php";
     }
 }
@@ -344,7 +344,7 @@ class inicioControladorConsultaIncapacidad
     public function inicio()
     {
 
-        $resultado=$this->modelo->consultaincap();
+        $resultado = $this->modelo->consultaincap();
 
         require_once "vista/consultaincap.php";
     }
@@ -364,7 +364,7 @@ class inicioControladorRegistrosIncapacidad
     public function inicio()
     {
 
-        $resultado=$this->modelo->consultaregistrosincap();
+        $resultado = $this->modelo->consultaregistrosincap();
 
         require_once "vista/consultaregincap.php";
     }
@@ -390,7 +390,7 @@ class inicioControladorBajas
             switch ($type) {
                 case 'empleado':
                     $resultados = $this->modelo->consultaNombreEmpleadodesdeAltas($query);
-                break;
+                    break;
             }
 
             // Devolver resultados como JSON
@@ -406,10 +406,10 @@ class inicioControladorBajas
             $alta = $_POST['idEmpleadoAlta'];
 
             if ($this->modelo->insertarBaja(
-            $fechaBaja,
-            $estadoCorreo,
-            $estadoFiniquito,
-            $alta
+                $fechaBaja,
+                $estadoCorreo,
+                $estadoFiniquito,
+                $alta
             )) {
                 echo "<script>
                     alert('Registro exitoso');
@@ -419,9 +419,8 @@ class inicioControladorBajas
             } else {
                 echo "<script>alert('Error al insertar la informacion');</script>";
             }
-
         }
-        
+
         require_once "vista/bajas.php";
     }
 }
@@ -438,7 +437,7 @@ class inicioControladorMenuBajas
     }
 
     public function inicio()
-    {        
+    {
         require_once "vista/menubajas.php";
     }
 }
@@ -455,8 +454,8 @@ class inicioControladorConsultaBajas
     }
 
     public function inicio()
-    {        
-        $resultado=$this->modelo->consultabajas();
+    {
+        $resultado = $this->modelo->consultabajas();
         require_once "vista/consultabajas.php";
     }
 }
@@ -473,13 +472,12 @@ class inicioControladorConsultaBajasporNomb
     }
 
     public function inicio()
-    {     if ($_SERVER['REQUEST_METHOD'] === 'POST') 
-        {
-        $nombre = strtoupper($_POST['nomEmpleado'] ?? null);
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nombre = strtoupper($_POST['nomEmpleado'] ?? null);
 
-        $resultado=$this->modelo->consultabajaspornombre($nombre);
-
-          }
+            $resultado = $this->modelo->consultabajaspornombre($nombre);
+        }
         require_once "vista/consultabajaspornombre.php";
     }
 }
@@ -496,23 +494,22 @@ class inicioControladorInsertINFONAVIT
     }
 
     public function inicio()
-    {     if ($_SERVER['REQUEST_METHOD'] === 'POST') 
-        {
-        $numcred = strtoupper($_POST['numcred'] ?? null);
-        $valorcred = strtoupper($_POST['valorcred'] ?? null);
-        $tipocred = strtoupper($_POST['tipocred'] ?? null);
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $numcred = strtoupper($_POST['numcred'] ?? null);
+            $valorcred = strtoupper($_POST['valorcred'] ?? null);
+            $tipocred = strtoupper($_POST['tipocred'] ?? null);
 
 
-        if ($this->modelo->insertarcreditoinfon($numcred, $valorcred, $tipocred)) {
-            echo "<script>
+            if ($this->modelo->insertarcreditoinfon($numcred, $valorcred, $tipocred)) {
+                echo "<script>
                 alert('Registro exitoso');
                 window.location.href = 'index.php?c=insertINFONAVIT';
             </script>";
-            return;
-        } else {
-            echo "<script>alert('Error al insertar la informacion');</script>";
-        }
-
+                return;
+            } else {
+                echo "<script>alert('Error al insertar la informacion');</script>";
+            }
         }
         require_once "vista/insINFONAVIT.php";
     }
@@ -531,24 +528,37 @@ class inicioControladorFiniquito
 
     public function inicio()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') 
-        {
-        $estado = $_POST['estado'];
-        $nombre = strtoupper($_POST['nomEmpleado'] ?? null);
+        if (isset($_GET['q']) && isset($_GET['type'])) {
+            $query = strtoupper($_GET['q']);
+            $type = $_GET['type'];
 
-        $resultado=$this->modelo->consultainfoBD($estado, $nombre);
-          }
+            switch ($type) {
+                case 'empleado':
+                    $resultados = $this->modelo->consultainfoBDFiniqPorNombre($query);
+                    break;
+            }
+
+            // Devolver resultados como JSON
+            header('Content-Type: application/json');
+            echo json_encode($resultados);
+            return;
+        }
+
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nombre = strtoupper($_POST['nombEmpleado']);
+
+            $resultado = $this->modelo->consultainfoBDFiniqporID($nombre);
+        }
         require_once "vista/finiquito.php";
     }
-
-    
 
     public function procesar()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             //var_dump($_POST); //es para ver que se esta enviando
             //var_dump($_POST); die;
-            $primerDAnio="01/01/2025";
+            $primerDAnio = "01/01/2025";
             $diasAnioAguinaldo = 365;
             $diasAguinaldo = 15;
             $primerDAnioObj = new DateTime($primerDAnio);
@@ -559,7 +569,10 @@ class inicioControladorFiniquito
             $bonoDV = $_POST['bonoDV'];
             $fechaBaja = $_POST['fechaBaja'];
             $fechaVacaciones = $_POST['fechaVacaciones'];
-            
+            $descInfonavit = $_POST['descInfonavit'];
+            $descOtrasRet = $_POST['descOtrasRet'];
+
+
 
             // Validar que las fechas
             if (!empty($fechaIngreso) && !empty($fechaBaja)) {
@@ -567,28 +580,28 @@ class inicioControladorFiniquito
                     $fechaIngresoObj = new DateTime($fechaIngreso);
                     $fechaBajaObj = new DateTime($fechaBaja);
                     $fechaVacacionesObj = new DateTime($fechaVacaciones);
-    
+
                     // Calcular la diferencia y obtener los dias
                     $diferencia = $fechaIngresoObj->diff($fechaBajaObj);
-                    $dias = $diferencia->days+1;
+                    $dias = $diferencia->days + 1;
 
 
                     //Calcular Aguinaldo
                     $diferencia = $primerDAnioObj->diff($fechaBajaObj);
-                    $diasDiferencia = $diferencia->days+1;
-                    $sueldoTotal=$salarioSDR+$bonoDV;
+                    $diasDiferencia = $diferencia->days + 1;
+                    $sueldoTotal = $salarioSDR + $bonoDV;
                     $factorAguinaldo = ($diasDiferencia * $diasAguinaldo) / $diasAnioAguinaldo;
                     $totalAguinaldo = $factorAguinaldo * $sueldoTotal;
 
                     //Calcular Vacaciones
-                    $difVacaciones = $fechaVacacionesObj -> diff($fechaBajaObj);
-                    $diasVac = $difVacaciones-> days+1;
-                    $aniosLab= ceil($dias/365.25);
-                    $diasVacionesLFT =calcularVacaciones($aniosLab);
-                    $factorVacaciones =($diasVac*$diasVacionesLFT)/$diasAnioAguinaldo;
+                    $difVacaciones = $fechaVacacionesObj->diff($fechaBajaObj);
+                    $diasVac = $difVacaciones->days + 1;
+                    $aniosLab = ceil($dias / 365.25);
+                    $diasVacionesLFT = calcularVacaciones($aniosLab);
+                    $factorVacaciones = ($diasVac * $diasVacionesLFT) / $diasAnioAguinaldo;
                     $totalVacaciones = $factorVacaciones * $sueldoTotal;
                     $primaVac = $totalVacaciones * 0.25;
-                  
+
 
                     //Dias pendientes de Pago
                     $diasPendporPagar = $diasPendientesPago * $sueldoTotal;
@@ -596,21 +609,82 @@ class inicioControladorFiniquito
 
 
                     //Total Percepciones
-                    $sumaPercerciones = $totalAguinaldo + $totalVacaciones + $primaVac+ $diasPendporPagar + $primaDominical;
-                    
+                    $sumaPercerciones = $totalAguinaldo + $totalVacaciones + $primaVac + $diasPendporPagar + $primaDominical;
 
+                    //Total Retenciones
+                    $sumaDeducciones = $descInfonavit + $descOtrasRet;
+
+                    //Neto a Pagar
+                    $netoPagar = $sumaPercerciones - $sumaDeducciones;
                 } catch (Exception $e) {
                     $mensaje = "Error al calcular: " . $e->getMessage();
                 }
-            }    
-           
+            }
+
             require_once "vista/finiquito.php";
         }
     }
-    
+
+    public function exportarExcel()
+    {
+        $diasLaborados = $_POST['diasLaborados'];
+        $factorAguinaldo = $_POST['factorAguinaldo'];
+        $totalAguinaldo = $_POST['totalAguinaldo'];
+        $totalVacaciones = $_POST['totalVacaciones'];
+        $primaVacacional = $_POST['primaVacacional'];
+        $primaDominical = $_POST['primaDominical'];
+        $sumaPercepciones = $_POST['sumaPercepciones'];
+        $sumaDeducciones = $_POST['sumaDeducciones'];
+        $netoPagar = $_POST['netoPagar'];
+
+        // Crear un archivo Excel
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Encabezados
+        $sheet->setCellValue('A1', 'Concepto')
+            ->setCellValue('B1', 'Valor');
+
+        // Datos
+        $sheet->setCellValue('A2', 'Días Laborados')
+            ->setCellValue('B2', $diasLaborados)
+            ->setCellValue('A3', 'Factor Aguinaldo')
+            ->setCellValue('B3', $factorAguinaldo)
+            ->setCellValue('A4', 'Total Aguinaldo')
+            ->setCellValue('B4', $totalAguinaldo)
+            ->setCellValue('A5', 'Total Vacaciones')
+            ->setCellValue('B5', $totalVacaciones)
+            ->setCellValue('A6', 'Prima Vacacional')
+            ->setCellValue('B6', $primaVacacional)
+            ->setCellValue('A7', 'Prima Dominical')
+            ->setCellValue('B7', $primaDominical)
+            ->setCellValue('A8', 'Suma Percepciones')
+            ->setCellValue('B8', $sumaPercepciones)
+            ->setCellValue('A9', 'Suma Deducciones')
+            ->setCellValue('B9', $sumaDeducciones)
+            ->setCellValue('A10', 'Neto a Pagar')
+            ->setCellValue('B10', $netoPagar);
+
+        // Ajustar ancho de columnas
+        foreach (range('A', 'B') as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true);
+        }
+
+        // Configurar encabezados para descargar el archivo
+        $fileName = "Finiquito_Calculado.xlsx";
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header("Content-Disposition: attachment;filename=\"$fileName\"");
+        header('Cache-Control: max-age=0');
+
+        // Crear archivo Excel
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
+        exit;
+    }
 }
 
-function calcularVacaciones($anio) {
+function calcularVacaciones($anio)
+{
     if ($anio == 1) {
         return 12; // Primer año: 12 días
     } elseif ($anio <= 5) {
@@ -637,21 +711,244 @@ class inicioControladorVacaciones
 
     public function inicio()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') 
-        {
-        $estado = $_POST['estado'];
-        $nombre = strtoupper($_POST['nomEmpleado'] ?? null);
-        $fechaBaja = $_POST['fechaBaja'];
-        $fechaVacaciones=$_POST['fechaVacaciones'];
 
-        $resultado=$this->modelo->consultainfoBD($estado, $nombre);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id_alta = $_POST['idEmpleadoAlta'];
+            $estadovacaciones = $_POST['estadovacaciones'];
+            $estadopago = $_POST['estadopago'];
+            $diastomados = $_POST['diasTomados'];
+            $fechaini = $_POST['fechaIni'];
+            $fechafin = $_POST['fechafinal'];
 
-        if ($fechaBaja){
-            echo "Algo paso";//
-        } else {
-            echo "paso otra cosa";
+            if ($this->modelo->insertarVacaciones($id_alta, $estadovacaciones, $estadopago, $diastomados, $fechaini, $fechafin)) {
+                echo "<script>
+                    alert('Registro exitoso');
+                    window.location.href = 'index.php?c=vacaciones';
+                </script>";
+                return;
+            } else {
+                echo "<script>alert('Error al insertar la informacion');</script>";
+            }
         }
-          }
-        require_once "vista/finiquito.php";
+
+        require_once "vista/vacaciones.php";
     }
+}
+
+class inicioControladormenuVacaciones
+{
+
+    private $modelo;
+
+    public function __construct()
+    {
+        // Crear un objeto de "consultaEmpleados" para visualizar empleados
+        $this->modelo = new consultaEmpleados(baseDatos::conectarBD());
+    }
+
+    public function inicio()
+    {
+        require_once "vista/menuVacacion.php";
+    }
+}
+
+class inicioControladorConsultaVacaciones
+{
+
+    private $modelo;
+
+    public function __construct()
+    {
+        // Crear un objeto de "consultaEmpleados" para visualizar empleados
+        $this->modelo = new consultaEmpleados(baseDatos::conectarBD());
+    }
+
+    public function inicio()
+    {
+        $resultado = $this->modelo->consultaVacaciones();
+        require_once "vista/consultaVacac.php";
+    }
+}
+
+class inicioControladorSolicModif
+{
+
+    private $modelo;
+
+    public function __construct()
+    {
+        // Crear un objeto de "consultaEmpleados" para visualizar empleados
+        $this->modelo = new consultaEmpleados(baseDatos::conectarBD());
+    }
+
+    public function inicio()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id_alta = $_POST['idEmpleadoAlta'];
+            $fechaSolic = $_POST['fechaSolicitud'];
+            $fechaRecib = $_POST['fechaRecibido'];
+            $fechaAplica = $_POST['fechaAplicacion'];
+            $tipoModif = $_POST['tipoModif'];
+            $modifAnt = $_POST['modifAnt'];
+            $modifNuevo = $_POST['modifNuev'];
+
+            if ($this->modelo->insertarSolModif(
+                $id_alta,
+                $fechaSolic,
+                $fechaRecib,
+                $fechaAplica,
+                $tipoModif,
+                $modifAnt,
+                $modifNuevo
+            )) {
+                echo "<script>
+                    alert('Registro exitoso');
+                    window.location.href = 'index.php?c=solicitudesModificacion';
+                </script>";
+                return;
+            } else {
+                echo "<script>alert('Error al insertar la informacion');</script>";
+            }
+        }
+
+        require_once "vista/solicitudesMod.php";
+    }
+}
+
+class inicioControladorModifTablaEmpleados
+{
+
+    private $modelo;
+
+    public function __construct()
+    {
+        // Crear un objeto de "consultaEmpleados" para visualizar empleados
+        $this->modelo = new consultaEmpleados(baseDatos::conectarBD());
+    }
+
+    public function inicio()
+    {
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $idEmpleado = $_POST['idEmpleado'];
+
+            $resultado = $this->modelo->modificacionesEmpleadoNombre($idEmpleado);
+        }
+
+        require_once "vista/modifTablaEmpl.php";
+    }
+
+    public function actualizar()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Capturar datos del formulario
+            $datos = [
+                'id_empleado' => $_POST['id_empleado'],
+                'nombreEmpleado' => $_POST['nombreEmpleado'],
+                'apellidoPaterno' => $_POST['apellidoPaterno'],
+                'apellidoMaterno' => $_POST['apellidoMaterno'],
+                'RFCEmpleado' => $_POST['RFCEmpleado'],
+                'CURPEmpleado' => $_POST['CURPEmpleado'],
+                'NSS' => $_POST['NSS'],
+                'correoEmpleado' => $_POST['correoEmpleado']
+            ];
+
+            // Llamar al modelo para actualizar
+            $resultado = $this->modelo->actualizarEmpleado($datos);
+
+            if ($this->modelo->actualizarEmpleado($datos)) {
+                echo "<script>
+                alert('Registro exitoso');
+                window.location.href = 'index.php?c=modificacionesdeTablaEmpleados';
+            </script>";
+                return;
+            } else {
+                echo "<script>alert('Error al insertar la informacion');</script>";
+            }
+        }
+
+        // Redirigir de vuelta a la vista
+        require_once "vista/modifTablaEmpl.php";
+    }
+}
+
+class inicioControladorMenuActualizaciones
+{
+
+    private $modelo;
+
+    public function __construct()
+    {
+        // Crear un objeto de "consultaEmpleados" para visualizar empleados
+        $this->modelo = new consultaEmpleados(baseDatos::conectarBD());
+    }
+
+    public function inicio()
+    {
+        require_once "vista/menuActualizaciones.php";
+    }
+}
+
+class inicioControladorModifTablaBaja
+{
+
+    private $modelo;
+
+    public function __construct()
+    {
+        // Crear un objeto de "consultaEmpleados" para visualizar empleados
+        $this->modelo = new consultaEmpleados(baseDatos::conectarBD());
+    }
+
+    public function inicio()
+{
+    $resultado = [];
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Verificar si se envió el campo 'idEmpleadoAlta'
+        if (isset($_POST['idEmpleadoAlta']) && !empty($_POST['idEmpleadoAlta'])) {
+            $idEmpleado = $_POST['idEmpleadoAlta'];
+            $resultado = $this->modelo->consultabajaspornombre($idEmpleado);
+        } else {
+            echo "<script>alert('No se proporcionó el ID del empleado.');</script>";
+        }
+    }
+
+    // Asegúrate de que $resultado sea un array, incluso si está vacío
+    if (!is_array($resultado)) {
+        $resultado = [];
+    }
+
+    require_once "vista/modifTablaBajas.php";
+}
+
+
+    public function actualizar()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Capturar datos del formulario
+        $datos = [
+            'id_alta' => $_POST['id_alta'],
+            'nombreEmpleado' => $_POST['nombreEmpleado'],
+            'apellidoPaterno' => $_POST['apellidoPaterno'],
+            'apellidoMaterno' => $_POST['apellidoMaterno'],
+            'estadoCorreo' => $_POST['estadoCorreo'],
+            'estadoFiniquito' => $_POST['estadoFiniquito'],
+            'fechaBaja' => $_POST['fechaBaja']
+        ];
+
+        // Llamar al modelo para actualizar
+        $resultado = $this->modelo->actualizarEmpleado($datos);
+
+        if ($resultado) {
+            echo "<script>
+            alert('Registro actualizado exitosamente');
+            window.location.href = 'index.php?c=modificacionesdeTablaBaja';
+        </script>";
+        } else {
+            echo "<script>alert('Error al actualizar la información');</script>";
+        }
+    }
+}
+
 }

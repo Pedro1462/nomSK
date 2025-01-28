@@ -39,23 +39,52 @@
                 <button type="button" id="buscarEmpleadoBtn" class="btn btn-secondary mt-2">Buscar Empleado</button>
             </div>
 
-            <div class="form-floating mb-3">
+            <!-- <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="busquedaEmpresa" name="busquedaEmpresa"
                     placeholder="Buscar empresa para el empleado" autocomplete="off" />
                 <label for="busquedaEmpresa">Buscar Empresa</label>
                 <div id="sugerenciasEmpresa" class="sugerencias-lista"></div>
                 <input type="hidden" id="idEmpresa" name="idEmpresa" />
                 <button type="button" id="buscarEmpresaBtn" class="btn btn-secondary mt-2">Buscar Empresa</button>
-            </div>
+            </div> -->
 
-            <div class="form-floating mb-3">
+            <br>
+            Selecciona la empresa que será su Patrón:
+            <select name="busquedaEmpresa">
+                <option value="1">Zona Fresca SA de CV</option>
+                <option value="2">Impulsora de Negocios Macrozen SA de CV</option>
+                <option value="3">Mexcunter SA de CV</option>
+                <option value="4">Kimura Import Mexico SA de CV</option>
+                <option value="5">Operadora Zona Fresca SA de CV</option>
+                <option value="6">Aldrich & Edevane SA de CV</option>
+                <option value="7">Arrendadora KH de Mexico SA de CV</option>
+                <option value="8">Servicios Stirhia SA de CV</option>
+            </select>
+            <br>
+
+            <!--  <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="busquedaSucursal" name="busquedaSucursal"
                     placeholder="Buscar sucursal para el empleado" autocomplete="off" />
                 <label for="busquedaSucursal">Buscar Sucursal</label>
                 <div id="sugerenciasSucursal" class="sugerencias-lista"></div>
                 <input type="hidden" id="idSucursal" name="idSucursal" />
                 <button type="button" id="buscarSucursalBtn" class="btn btn-secondary mt-2">Buscar Sucursal</button>
-            </div>
+            </div> -->
+
+            <br>
+            Selecciona la sucursal:
+            <select name="busquedaSucursal">
+                <option value="1">Administracion</option>
+                <option value="2">Almacen</option>
+                <option value="3">Palenque</option>
+                <option value="4">Kohunlich</option>
+                <option value="5">Desayunos</option>
+                <option value="6">Servicio a Domicilio</option>
+                <option value="7">Outlet</option>
+                <option value="8">Palma Real</option>
+                <option value="9">Palmas</option>
+            </select>
+            <br>
 
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="busquedaPuesto" name="busquedaPuesto"
@@ -66,32 +95,62 @@
                 <button type="button" id="buscarPuestoBtn" class="btn btn-secondary mt-2">Buscar Puesto</button>
             </div>
 
-            <div class="form-floating mb-3">
+            <!--<div class="form-floating mb-3">
                 <input type="text" class="form-control" id="busquedaGenero" name="busquedaGenero"
                     placeholder="Buscar genero para el empleado" autocomplete="off" />
                 <label for="busquedaGenero">Buscar Genero</label>
                 <div id="sugerenciasGenero" class="sugerencias-lista"></div>
                 <input type="hidden" id="idGenero" name="idGenero" />
                 <button type="button" id="buscarGeneroBtn" class="btn btn-secondary mt-2">Buscar Genero</button>
-            </div>
+            </div>-->
 
-            <div class="form-floating mb-3">
+            <br>
+            Selecciona el genero:
+            <select name="busquedaGenero">
+                <option value="1">Femenino</option>
+                <option value="2">Masculino</option>
+            </select>
+            <br>
+
+            <!-- <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="busquedaDescanso" name="busquedaDescanso"
                     placeholder="Buscar descanso para el empleado" autocomplete="off" />
                 <label for="busquedaDescanso">Buscar Descanso</label>
                 <div id="sugerenciasDescanso" class="sugerencias-lista"></div>
                 <input type="hidden" id="idDescanso" name="idDescanso" />
                 <button type="button" id="buscarDescansoBtn" class="btn btn-secondary mt-2">Buscar Descanso</button>
-            </div>
+            </div> -->
 
-            <div class="form-floating mb-3">
+            <br>
+            Selecciona el dia de descanso:
+            <select name="busquedaDescanso">
+                <option value="1">Domingo</option>
+                <option value="2">Lunes</option>
+                <option value="3">Martes</option>
+                <option value="4">Miercoles</option>
+                <option value="5">Jueves</option>
+                <option value="6">Viernes</option>
+                <option value="7">Sabado</option>
+            </select>
+            <br>
+
+            <!--<div class="form-floating mb-3">
                 <input type="text" class="form-control" id="busquedaFormaPago" name="busquedaFormaPago"
                     placeholder="Buscar forma de pago para el empleado" autocomplete="off" />
                 <label for="busquedaFormaPago">Buscar Forma de Pago</label>
                 <div id="sugerenciasFormaPago" class="sugerencias-lista"></div>
                 <input type="hidden" id="idFormaPago" name="idFormaPago" />
                 <button type="button" id="buscarFormaPagoBtn" class="btn btn-secondary mt-2">Buscar Forma de Pago</button>
-            </div>
+            </div>-->
+
+            <br>
+            Selecciona la forma de Pago:
+            <select name="busquedaFormaPago">
+                <option value="1">Efectivo</option>
+                <option value="2">Transferencia</option>
+                <option value="3">Cheque</option>
+            </select>
+            <br>
 
             <div class="form-floating mb-3">
                 <input type="number" class="form-control" id="busquedaCP" name="busquedaCP"

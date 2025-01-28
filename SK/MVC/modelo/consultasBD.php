@@ -264,6 +264,91 @@ class consultaEmpleados
         }
     }
 
+    public function insertarSolModif($id_alta, $fechaSolic, $fechaRecib, $fechaAplica,$tipoModif, $modifAnt, $modifNuevo)
+    {
+
+        if (!$this->empleadosConexion) {
+            die("Error: No se pudo establecer la conexión a la base de datos.");
+        }
+
+        $query = "
+        INSERT INTO registromodificacion(id_alta,fechaSolicitud,fechaRecibido,fechaAplicacion,id_tipoModificacion,modifAnterior,modifNuevo)
+        VALUES (:idAlta, :fechaSolic, :fechaRecib, :fechaAplic, :idModif, :ModifAnt, :ModifNuev)
+        ";
+
+        $stmt = $this->empleadosConexion->prepare($query);
+
+        if (!$stmt) {
+            die("Error en la preparación del Insert.");
+        }
+
+        try {
+
+            $result = $stmt->execute([
+                ':idAlta' => $id_alta,
+                ':fechaSolic' => $fechaSolic,
+                ':fechaRecib' => $fechaRecib,
+                ':fechaAplic' => $fechaAplica,
+                ':idModif' => $tipoModif,
+                ':ModifAnt' => $modifAnt,
+                ':ModifNuev' => $modifNuevo
+            ]);
+
+            return $result;
+        } catch (PDOException $e) {
+            echo "Error al Insertar: " . $e->getMessage();
+            return false;
+        }
+
+        if (!$result) {
+            print_r($stmt->errorInfo());
+            die("Error al Insertar.");
+            return false;
+        }
+    }
+
+    public function insertarVacaciones($id_alta, $id_edoVacacion, $id_edopago, $diastomados, $fechaini, $fechafin)
+    {
+
+        if (!$this->empleadosConexion) {
+            die("Error: No se pudo establecer la conexión a la base de datos.");
+        }
+
+        $query = "
+        INSERT INTO vacaciones (id_alta, id_edoVacaciones, id_edoPago, diasTomados, fechainicial, fechaFinal )
+        VALUES (:idAlta, :edovacaciones, :edopago, :diastomados, :fechaini, :fechafin)
+        ";
+
+        $stmt = $this->empleadosConexion->prepare($query);
+
+        if (!$stmt) {
+            die("Error en la preparación del Insert.");
+        }
+
+        try {
+
+            $result = $stmt->execute([
+                ':idAlta' => $id_alta,
+                ':edovacaciones' => $id_edoVacacion,
+                ':edopago' => $id_edopago,
+                ':diastomados' => $diastomados,
+                ':fechaini' => $fechaini,
+                ':fechafin' => $fechafin
+            ]);
+
+            return $result;
+        } catch (PDOException $e) {
+            echo "Error al Insertar: " . $e->getMessage();
+            return false;
+        }
+
+        if (!$result) {
+            print_r($stmt->errorInfo());
+            die("Error al Insertar.");
+            return false;
+        }
+    }
+
     public function vincularIncapacidad($empleado, $serie, $ramoseguro)
     {
 
@@ -742,7 +827,113 @@ class consultaEmpleados
             error_log("Error en la consulta: " . $e->getMessage());
             return [];
         }
-    }    
+    }   
+
+    public function consultainfoBDFiniqporID($id_empleado)
+    {
+        if (!$this->empleadosConexion) {
+            throw new RuntimeException("Error: No se pudo establecer la conexión a la base de datos.");
+        }
+    
+        $query = "
+            SELECT 
+                a.id_empleado, e.apellidoPaterno, e.apellidoMaterno, e.nombreEmpleado, 
+                e.RFCEmpleado, e.CURPEmpleado, e.NSS, e.correoEmpleado, g.genero, 
+                c.numCodPostal, s.sucursales, e2.razonSocial, a.fechaingreso, 
+                a.fechaAltaIMSS, s2.SDR, s3.SDI, b2.bonoDiarioVariable, p.puesto, 
+                d.diaDescanso, f.tipoPago, a.codigoRegistroNomipaq, i.numCredito,i.valorCredito, t.tipoCredinfonavit 
+            FROM 
+                altas a 
+            LEFT JOIN empleado e ON a.id_empleado = e.id_empleado
+            LEFT JOIN genero g ON a.id_genero = g.id_genero
+            LEFT JOIN sucursales s ON a.id_sucursal = s.id_sucursal
+            LEFT JOIN salariodiarioreal s2 ON a.id_salarioDiarioReal = s2.id_salarioDiarioreal
+            LEFT JOIN bonovariable b2 ON a.id_bonoVariable = b2.id_bonoVariable
+            LEFT JOIN empresas e2 ON a.id_empresas = e2.id_empresas
+            LEFT JOIN puestos p ON a.id_puesto = p.id_puesto
+            LEFT JOIN descansos d ON a.id_descanso = d.id_descanso
+            LEFT JOIN salariodiariointegrado s3 ON a.id_salarioDiariointegrado = s3.id_salarioDiariointegrado
+            LEFT JOIN formapago f ON a.id_formaPago = f.id_formaPago
+            LEFT JOIN codigopostal c ON a.id_codigoP = c.id_codigoP
+            left join infonavit i on a.id_infonavit =i.id_infonavit 
+            left join tipocredinfonavit t on i.id_tipoCredinfonavit =t.id_tipoCredinfonavit 
+            WHERE a.id_empleado = :idEmpleado
+        ";
+    
+        $stmt = $this->empleadosConexion->prepare($query);
+    
+        if (!$stmt) {
+            throw new RuntimeException("Error en la preparación de la consulta.");
+        }
+    
+        try {
+
+            $result = $stmt->execute([
+                ':idEmpleado' => "$id_empleado"
+            ]);
+    
+            // Devuelve todos los resultados como un array asociativo
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        } catch (PDOException $e) {
+            // Manejamos el error registrándolo o informándolo
+            error_log("Error en la consulta: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public function consultainfoBDFiniqPorNombre($nombre)
+    {
+        if (!$this->empleadosConexion) {
+            throw new RuntimeException("Error: No se pudo establecer la conexión a la base de datos.");
+        }
+    
+        $query = "
+            SELECT 
+                a.id_empleado, e.apellidoPaterno, e.apellidoMaterno, e.nombreEmpleado, 
+                e.RFCEmpleado, e.CURPEmpleado, e.NSS, e.correoEmpleado, g.genero, 
+                c.numCodPostal, s.sucursales, e2.razonSocial, a.fechaingreso, 
+                a.fechaAltaIMSS, s2.SDR, s3.SDI, b2.bonoDiarioVariable, p.puesto, 
+                d.diaDescanso, f.tipoPago, a.codigoRegistroNomipaq, i.numCredito,i.valorCredito, t.tipoCredinfonavit 
+            FROM 
+                altas a 
+            LEFT JOIN empleado e ON a.id_empleado = e.id_empleado
+            LEFT JOIN genero g ON a.id_genero = g.id_genero
+            LEFT JOIN sucursales s ON a.id_sucursal = s.id_sucursal
+            LEFT JOIN salariodiarioreal s2 ON a.id_salarioDiarioReal = s2.id_salarioDiarioreal
+            LEFT JOIN bonovariable b2 ON a.id_bonoVariable = b2.id_bonoVariable
+            LEFT JOIN empresas e2 ON a.id_empresas = e2.id_empresas
+            LEFT JOIN puestos p ON a.id_puesto = p.id_puesto
+            LEFT JOIN descansos d ON a.id_descanso = d.id_descanso
+            LEFT JOIN salariodiariointegrado s3 ON a.id_salarioDiariointegrado = s3.id_salarioDiariointegrado
+            LEFT JOIN formapago f ON a.id_formaPago = f.id_formaPago
+            LEFT JOIN codigopostal c ON a.id_codigoP = c.id_codigoP
+            left join infonavit i on a.id_infonavit =i.id_infonavit 
+            left join tipocredinfonavit t on i.id_tipoCredinfonavit =t.id_tipoCredinfonavit 
+            WHERE e.nombreEmpleado like :nombreEmpleado
+        ";
+    
+        $stmt = $this->empleadosConexion->prepare($query);
+    
+        if (!$stmt) {
+            throw new RuntimeException("Error en la preparación de la consulta.");
+        }
+    
+        try {
+
+            $result = $stmt->execute([
+                ':nombreEmpleado' => "%$nombre%"
+            ]);
+    
+            // Devuelve todos los resultados como un array asociativo
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        } catch (PDOException $e) {
+            // Manejamos el error registrándolo o informándolo
+            error_log("Error en la consulta: " . $e->getMessage());
+            return [];
+        }
+    }
 
     public function consultaincap()
     {
@@ -751,7 +942,8 @@ class consultaEmpleados
         }
     
         $query = "
-            select i.id_incapacidad, e.apellidoPaterno , e.apellidoMaterno , e.nombreEmpleado , i.serieFolio, t.tipoRamo, t2.tipoRTrabajo, t3.tipoincap,r.diasAutorizados, r.periodoinicial, e2.registroincap 
+            select i.id_incapacidad, e.apellidoPaterno , e.apellidoMaterno , e.nombreEmpleado , e3.razonSocial ,i.serieFolio, t.tipoRamo,
+            t2.tipoRTrabajo, t3.tipoincap,r.diasAutorizados, r.periodoinicial, e2.registroincap 
             from incapacidades i 
             left join empleado e on i.id_empleado = e.id_empleado 
             left join ramoseguro r on i.id_ramoSeguro = r.id_ramoSeguro
@@ -759,6 +951,8 @@ class consultaEmpleados
             left join tiporiesgo t2 on t2.id_tipoRiesgo = r.id_tipoRiesgo 
             left join tipoincapacidad t3 on t3.id_tipoincapacidad = r.id_tipoincapacidad
             left  join estadoincapacidad e2 on e2.id_estadoincapacidad = r.id_estadoincapacidad
+            left join altas a on i.id_empleado = a.id_empleado 
+            left join empresas e3 on e3.id_empresas = a.id_empresas
         ";
     
         $stmt = $this->empleadosConexion->prepare($query);
@@ -892,4 +1086,123 @@ class consultaEmpleados
             return [];
         }
     }
+
+    public function consultaVacaciones()
+    {
+
+        if (!$this->empleadosConexion) {
+            die("Error: No se pudo establecer la conexión a la base de datos.");
+        }
+
+        $query = "
+        select v.id_vacaciones,e.apellidoPaterno, e.apellidoMaterno, e.nombreEmpleado, e2.edoVacaciones, e3.edoPago ,
+        v.diasTomados, v.fechainicial, v.fechaFinal  
+        from vacaciones v 
+        left join altas a on a.id_alta = v.id_alta
+        left join empleado e on e.id_empleado  = a.id_empleado 
+        left join estadovacaciones e2 on v.id_edoVacaciones =e2.id_edoVacaciones 
+        left join estadopago e3 on v.id_edoPago = e3.id_edoPago
+        ";
+
+        $stmt = $this->empleadosConexion->prepare($query);
+
+        if (!$stmt) {
+            die("Error en la preparación del Insert.");
+        }
+
+        try {
+
+            $result = $stmt->execute([
+                
+            ]);
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+        } catch (PDOException $e) {
+            echo "Error al Insertar: " . $e->getMessage();
+            return false;
+        }
+
+        if (!$result) {
+            print_r($stmt->errorInfo());
+            die("Error al Insertar.");
+            return false;
+        }
+    }
+
+    public function modificacionesEmpleadoNombre($idEmpleado)
+    {
+        if (!$this->empleadosConexion) {
+            throw new RuntimeException("Error: No se pudo establecer la conexión a la base de datos.");
+        }
+    
+        $query = "
+            select * from empleado e where e.id_empleado = :idEmpleado 
+        ";
+    
+        $stmt = $this->empleadosConexion->prepare($query);
+    
+        if (!$stmt) {
+            throw new RuntimeException("Error en la preparación de la consulta.");
+        }
+    
+        try {
+
+            $result = $stmt->execute([
+                ':idEmpleado' => $idEmpleado
+            ]);
+    
+            // Devuelve todos los resultados como un array asociativo
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        } catch (PDOException $e) {
+            // Manejamos el error registrándolo o informándolo
+            error_log("Error en la consulta: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public function ActualizarEmpleado($datos)
+    {
+        if (!$this->empleadosConexion) {
+            throw new RuntimeException("Error: No se pudo establecer la conexión a la base de datos.");
+        }
+    
+        $query = "
+             UPDATE empleado
+        SET
+            nombreEmpleado = :nombreEmpleado,
+            apellidoPaterno = :apellidoPaterno,
+            apellidoMaterno = :apellidoMaterno,
+            RFCEmpleado = :RFCEmpleado,
+            CURPEmpleado = :CURPEmpleado,
+            NSS = :NSS,
+            correoEmpleado = :correoEmpleado
+        WHERE id_empleado = :id_empleado 
+        ";
+    
+        $stmt = $this->empleadosConexion->prepare($query);
+    
+        if (!$stmt) {
+            throw new RuntimeException("Error en la preparación de la consulta.");
+        }
+    
+        try {
+            return $stmt->execute([
+                ':id_empleado' => $datos['id_empleado'],
+                ':nombreEmpleado' => $datos['nombreEmpleado'],
+                ':apellidoPaterno' => $datos['apellidoPaterno'],
+                ':apellidoMaterno' => $datos['apellidoMaterno'],
+                ':RFCEmpleado' => $datos['RFCEmpleado'],
+                ':CURPEmpleado' => $datos['CURPEmpleado'],
+                ':NSS' => $datos['NSS'],
+                ':correoEmpleado' => $datos['correoEmpleado']
+            ]);
+        } catch (PDOException $e) {
+            error_log("Error al actualizar los datos: " . $e->getMessage());
+            return false;
+        }
+    }
+
+
 }

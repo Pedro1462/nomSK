@@ -4,6 +4,8 @@ $controlador = isset($_GET['c']) ? $_GET['c'] : 'inicio';
 $accion = isset($_GET['a']) ? $_GET['a'] : 'inicio';
 
 require_once "controlador/inicio.controlador.php";
+require_once __DIR__ . '/../vendor/autoload.php';
+
 
 switch ($controlador) {
     case 'inicio':
@@ -91,8 +93,34 @@ switch ($controlador) {
         ejecutarAccion($controladorObjeto, $accion, $_POST);
         break;
 
-    default:
-        # code...
+    case 'menuVacaciones':
+        $controladorObjeto = new inicioControladormenuVacaciones();
+        ejecutarAccion($controladorObjeto, $accion, $_POST);
+        break;
+
+    case 'consultaVacaciones':
+        $controladorObjeto = new inicioControladorConsultaVacaciones();
+        ejecutarAccion($controladorObjeto, $accion, $_POST);
+        break;
+
+    case 'solicitudesModificacion':
+        $controladorObjeto = new inicioControladorSolicModif();
+        ejecutarAccion($controladorObjeto, $accion, $_POST);
+        break;
+
+    case 'modificacionesdeTablaEmpleados':
+        $controladorObjeto = new inicioControladorModifTablaEmpleados();
+        ejecutarAccion($controladorObjeto, $accion, $_POST);
+        break;
+
+    case 'menudelasactualizaciones':
+        $controladorObjeto = new inicioControladorMenuActualizaciones();
+        ejecutarAccion($controladorObjeto, $accion, $_POST);
+        break;
+
+    case 'modificacionesdeTablaBaja':
+        $controladorObjeto = new inicioControladorModifTablaBaja();
+        ejecutarAccion($controladorObjeto, $accion, $_POST);
         break;
 }
 

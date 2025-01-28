@@ -25,6 +25,7 @@
                                 <th>Apellido Paterno</th>
                                 <th>Apellido Materno</th>
                                 <th>Nombre del Empleado</th>
+                                <th>Razon Social</th>
                                 <th>Serie y Folio</th>
                                 <th>Tipo Ramo</th>
                                 <th>Tipo de Riesgo</th>
@@ -43,6 +44,7 @@
                                         <td><?= htmlspecialchars($empleado['apellidoPaterno']) ?></td>
                                         <td><?= htmlspecialchars($empleado['apellidoMaterno']) ?></td>
                                         <td><?= htmlspecialchars($empleado['nombreEmpleado']) ?></td>
+                                        <td><?= htmlspecialchars($empleado['razonSocial']) ?></td>
                                         <td><?= htmlspecialchars($empleado['serieFolio']) ?></td>
                                         <td><?= htmlspecialchars($empleado['tipoRamo']) ?></td>
                                         <td><?= htmlspecialchars($empleado['tipoRTrabajo']) ?></td>
